@@ -8,7 +8,20 @@ Integrantes:
   -Claudia Linares        20171083
   -Alfredo Espinoza       20170552
 
+#Cargar variables.
 
+#ELECTRICIDAD
+
+```{r}
+library(rio)
+elec="https://github.com/adrianoshimante1998/Trabajo-grupal/raw/master/API_EG.ELC.ACCS.ZS_DS2_en_excel_v2_422316.xls"
+electricidad=import(elec)
+electricidad[,]=lapply(electricidad[,], trimws,whitespace = "[\\h\\v]") # no blanks
+electricidad=na.omit(electricidad)
+names(electricidad)=gsub(" ","",names(electricidad)) 
+electricidad$Electricity2017=as.numeric(electricidad$Electricity2017) #UNO SOLO 
+electricidad=na.omit(electricidad) 
+```
 
 
 
