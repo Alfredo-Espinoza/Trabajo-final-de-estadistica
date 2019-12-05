@@ -870,4 +870,100 @@ deturb=na.omit(deturb)
 
 deturb es la base que acumula toda la información
 
+#Confirmando modelo teórico
+Si la exploración apoyaba nuestro marco teórico, podemos proponer cómo construir los indices. Estos índices están inspirados en la teoría de Lipset: A mayor modernidad, más democracia. Bienestar, urbanización, educación y desarrollo económico se usan para tratar de expresar "modernidad".
+Bienestar <- empleo, expevida,  agua, saludcob
+Urbanización <- urbrate, electric, internet, road
+Educación <- litrate, schorate, gastoedu, stuteachrat
+Desarrollo económico <- pbicreci, gdpcapita, export
+
+```{r}
+model <- 'bienestar  =~ empleo + expevida + agua + saludcob
+          urbanizacion =~ urbrate + electric + internet + road
+          educacion   =~ litrate + schorate + gastoedu + stuteachrat
+          desarrolloecon   =~ pbicreci + gdpcapita + export'
+```
+
+#NORMALIZACION
+
+```{r}
+# normalizar las variables a valor z:
+deturb2=scale(deturb[,-c(1,17)])
+library(lavaan)
+```
+
+```{r}
+cfa_fit <- cfa(model, data=deturb2, 
+           std.lv=TRUE,  
+           missing="fiml")
+```
+
+#Preparo los tests:
+```{r}
+allParamCFA=parameterEstimates(cfa_fit,standardized = T)
+allFitCFA=as.list(fitMeasures(cfa_fit))
+```
+
+Veamos resultados:
+
+Si cada indicador tiene una buena conexión con su latente (ver p valor):
+
+```{r}
+library(knitr)
+kable(allParamCFA[allParamCFA$op=="=~",])
+```
+
+Averigüemos qué tan bien salió el modelo:
+
+El ChiSquare es NO significativo (p_value debe ser mayor a 0.05 para que sea bueno)?
+
+```{r}
+allFitCFA[c("chisq", "df", "pvalue")] # pvalue>0.05
+```
+
+Sale mal
+
+El Índice Tucker Lewi es mayor a 0.9?
+```{r}
+allFitCFA$tli # > 0.90
+```
+
+Sale mal
+
+La Raíz del error cuadrático medio de aproximación es menor a 0.05?
+
+```{r}
+allFitCFA[c('rmsea.ci.lower','rmsea' ,'rmsea.ci.upper')] # 0.05 en el Int de Conf?
+```
+Sale mal
+
+Añadimos los índices a la data de indicadores:
+```{r}
+deturb=as.data.frame(cbind(deturb,lavPredict(cfa_fit)))
+```
+
+Veamos un resumen:
+
+```{r}
+summary(deturb)
+```
+
+Referencia
+
+```{r}
+# original
+table(deturb$regimetype)
+```
+
+1 es democracia. Está bien el orden.
+
+```{r}
+# como numero
+table(as.numeric(deturb$regimetype))
+```
+
+```{r}
+str(deturb)
+```
+
 
