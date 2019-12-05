@@ -430,3 +430,81 @@ complete.cases(studTeach)
 ```{r}
 str(studTeach)
 ```
+
+#Merge de las variables. Se modificará el nombre de los países para maximizar las combinaciones.
+
+```{r}
+
+elecem=merge(electricidad,empleo,all.x=T, all.y=T)
+
+```
+
+```{r}
+elecem[!complete.cases(elecem),]
+```
+
+
+```{r}
+library(knitr)
+library(kableExtra)
+kable(elecem[!complete.cases(elecem),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+```{r}
+elecem=na.omit(elecem)
+```
+
+Se pierden países por falta de datos
+
+```{r}
+elexpo=merge(elecem,expo,all.x=T, all.y=T)
+```
+
+```{r}
+kable(elexpo[!complete.cases(elexpo),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+```{r}
+elexpo=na.omit(elexpo)
+```
+
+#Con internet
+
+```{r}
+elein=merge(elexpo,internet,all.x=T, all.y=T)
+
+```
+
+```{r}
+kable(elein[!complete.cases(elein),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+Se pierden por falta de datos
+
+```{r}
+elein=na.omit(elein)
+```
+
+#Con basevida
+
+```{r}
+elvida=merge(elein,basevida,all.x=T, all.y=T)
+```
+
+```{r}
+kable(elvida[!complete.cases(elvida),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+Falta de datos
+
+```{r}
+elvida=na.omit(elvida)
+```
+
