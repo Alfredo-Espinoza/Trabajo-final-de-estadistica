@@ -1127,3 +1127,81 @@ myColors=c('red','skyblue',"darkgreen","purple")
 plot(mapaMundo,col='black', main='Mapa  a partir de índices')
 plot(teste,col=myColors[teste$clustDIV], add=T,border="white")
 ```
+
+##Regresion logistica multivariada
+Se hace esta regresión porque la dependiente es binaria.
+
+```{r}
+str(deturb)
+```
+
+```{r}
+# semilla
+
+set.seed(2019)
+
+### primer modelo:
+#data como subset
+vars1=deturb[,c("regimetype","bienestar","urbanizacion","educacion","desarrolloecon")]
+
+#regresion
+rlog1=glm(regimetype~., data=vars1,family = binomial)
+
+#resultado clásico:
+summary(rlog1)
+```
+
+Veamos ahora el resultado con mejor formato:
+```{r, results='asis'}
+library(stargazer)
+#resultado
+stargazer(rlog1,type="html")
+```
+
+```{r}
+predicted1 <- plogis(predict(rlog1, vars1[,-1]))
+```
+
+```{r}
+library(InformationValue)
+confusionMatrix(vars1$regimetype, predicted1)
+```
+
+Debemos averigar si predice razonablemene bien
+
+Dos medidas importantes es saber qué tanto acertamos predecir el evento:
+
+```{r}
+sensitivity(actuals = as.numeric(vars1$regimetype),predictedScores = predicted1)
+
+```
+
+Y qué tanto acertamos predecir la no ocurrencia del evento:
+
+```{r}
+specificity(actuals = as.numeric(vars1$regimetype),predictedScores = predicted1)
+```
+
+No parece tener mucha capacidad predictiva
+
+#ODDS RATIO
+
+```{r}
+exp(cbind(OR = coef(rlog1), confint(rlog1)))
+
+```
+
+
+#Efectos marginales
+
+```{r}
+# interpracion usando marginal effects:
+library(margins)
+# 
+(modellog1 = margins(rlog1))
+```
+
+```{r}
+(margins=summary(modellog1))
+
+```
