@@ -1056,4 +1056,28 @@ library(ggrepel)
 
 fviz_dend(res.diana, cex = 0.5,horiz = T)
 ```
+##Mapa de los casos
 
+```{r}
+library(sp)
+library(geojsonio)
+library(rgdal)
+
+fromGit="https://github.com/adrianoshimante1998/PC4viernes/raw/master/UIA_World_Countries_Boundaries.geojson"
+
+mapaMundo <- rgdal::readOGR(fromGit,stringsAsFactors = FALSE)
+plot(mapaMundo)
+```
+
+```{r,fig.width=10, fig.height=5} 
+plot(mapaMundo, border='grey')
+```
+
+
+```{r}
+head(mapaMundo@data)
+```
+
+```{r}
+sort(mapaMundo@data$COUNTRYAFF)
+```
