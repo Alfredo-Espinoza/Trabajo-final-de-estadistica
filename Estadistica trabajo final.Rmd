@@ -1082,3 +1082,30 @@ head(mapaMundo@data)
 ```{r}
 sort(mapaMundo@data$COUNTRYAFF)
 ```
+
+Calculando posiciones
+
+```{r}
+teste=merge(mapaMundo,deturb,by.x='COUNTRYAFF',by.y='CountryName', all.x=T,all.y=T)
+```
+
+```{r}
+teste$COUNTRYAFF
+```
+
+Recuperando nombres para el mapa 
+
+```{r}
+deturb[deturb$CountryName=="Congo, Dem. Rep.","CountryName"]="Democratic Republic of the Congo"
+deturb[deturb$CountryName=="Cabo Verde","CountryName"]="Cape Verde"
+deturb[deturb$CountryName=="Cote d'Ivoire","CountryName"]="Côte d'Ivoire"
+deturb[deturb$CountryName=="Gambia, The","CountryName"]="Gambia"
+deturb[deturb$CountryName=="Iran, Islamic Rep.","CountryName"]="Iran"
+deturb[deturb$CountryName=="Kyrgyz Republic","CountryName"]="Kyrgyzstan"
+deturb[deturb$CountryName=="Lao PDR","CountryName"]="Laos"
+deturb[deturb$CountryName=="Slovak Republic","CountryName"]="Slovakia"
+```
+
+```{r}
+CountryFull=merge(mapaMundo,deturb,by.x='COUNTRYAFF',by.y='CountryName')
+```
