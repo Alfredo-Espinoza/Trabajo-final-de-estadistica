@@ -508,3 +508,161 @@ Falta de datos
 elvida=na.omit(elvida)
 ```
 
+#Con GDP
+
+```{r}
+elgdp=merge(elvida,GDP,all.x=T, all.y=T)
+```
+
+```{r}
+kable(elgdp[!complete.cases(elgdp),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+Se pierden casos por falta de datos.
+
+```{r}
+elgdp=na.omit(elgdp)
+```
+
+#Con crepbi
+
+```{r}
+elcrep=merge(elgdp,crepbi,all.x=T, all.y=T)
+
+```
+
+```{r}
+kable(elcrep[!complete.cases(elcrep),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+Se pierden casos por falta de datos
+
+```{r}
+elcrep=na.omit(elcrep)
+```
+
+#Con agua
+
+```{r}
+elagua=merge(elcrep,agua,all.x=T, all.y=T)
+
+```
+
+
+```{r}
+kable(elagua[!complete.cases(elagua),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+Se pierden casos por falta de datos
+
+```{r}
+elagua=na.omit(elagua)
+```
+
+#Con salud
+
+```{r}
+agsalud=merge(elagua,salud,all.x=T, all.y=T)
+```
+
+```{r}
+kable(agsalud[!complete.cases(agsalud),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+Codigo de cambio
+
+```{r}
+salud[salud$CountryName=="Bahamas","CountryName"]="Bahamas, The"
+salud[salud$CountryName=="Bolivia (Plurinational State of)","CountryName"]="Bolivia"
+salud[salud$CountryName=="Congo","CountryName"]="Congo, Rep."
+salud[salud$CountryName=="Côte d'Ivoire","CountryName"]="Cote d'Ivoire"
+salud[salud$CountryName=="Czechia","CountryName"]="Czech Republic"
+salud[salud$CountryName=="Democratic Republic of the Congo","CountryName"]="Congo, Dem. Rep."
+salud[salud$CountryName=="Egypt","CountryName"]="Egypt, Arab Rep."
+salud[salud$CountryName=="Gambia","CountryName"]="Gambia, The"
+salud[salud$CountryName=="Iran (Islamic Republic of)","CountryName"]="Iran, Islamic Rep."
+salud[salud$CountryName=="Republic of Korea","CountryName"]="Korea, Rep."
+salud[salud$CountryName=="Kyrgyzstan","CountryName"]="Kyrgyz Republic"
+salud[salud$CountryName=="Lao People's Democratic Republic","CountryName"]="Lao PDR"
+salud[salud$CountryName=="Republic of North Macedonia","CountryName"]="North Macedonia"
+salud[salud$CountryName=="Republic of Moldova","CountryName"]="Moldova"
+salud[salud$CountryName=="Slovakia","CountryName"]="Slovak Republic"
+salud[salud$CountryName=="Saint Vincent and the Grenadines","CountryName"]="St. Vincent and the Grenadines"
+salud[salud$CountryName=="United Kingdom of Great Britain and Northern Ireland","CountryName"]="United Kingdom"
+salud[salud$CountryName=="United Republic of Tanzania","CountryName"]="Tanzania"
+salud[salud$CountryName=="United States of America","CountryName"]="United States"
+salud[salud$CountryName=="Viet Nam","CountryName"]="Vietnam"
+```
+
+```{r}
+agsalud=merge(elagua,salud,all.x=T, all.y=T)
+```
+
+```{r}
+kable(agsalud[!complete.cases(agsalud),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+Falta de datos
+
+```{r}
+agsalud=na.omit(agsalud)
+```
+
+#Con ccarre
+
+```{r}
+accarre=merge(agsalud,ccarre,all.x=T, all.y=T)
+```
+
+```{r}
+kable(accarre[!complete.cases(accarre),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+```{r}
+ccarre[ccarre$CountryName=="Bosnia & Herz.","CountryName"]="Bosnia and Herzegovina"
+ccarre[ccarre$CountryName=="Brunei","CountryName"]="Brunei Darussalam"
+ccarre[ccarre$CountryName=="Cape Verde","CountryName"]="Cabo Verde"
+ccarre[ccarre$CountryName=="Czech Rep.","CountryName"]="Czech Republic"
+ccarre[ccarre$CountryName=="Czech Rep.","CountryName"]="Czech Republic"
+ccarre[ccarre$CountryName=="Domin. Rep.","CountryName"]="Dominican Republic"
+ccarre[ccarre$CountryName=="DR Congo","CountryName"]="Congo, Dem. Rep."
+ccarre[ccarre$CountryName=="Egypt","CountryName"]="Egypt, Arab Rep."
+ccarre[ccarre$CountryName=="Gambia","CountryName"]="Gambia, The"
+ccarre[ccarre$CountryName=="Iran","CountryName"]="Iran, Islamic Rep."
+ccarre[ccarre$CountryName=="Ivory Coast","CountryName"]="Cote d'Ivoire"
+ccarre[ccarre$CountryName=="Kyrgyzstan","CountryName"]="Kyrgyz Republic"
+ccarre[ccarre$CountryName=="Laos","CountryName"]="Lao PDR"
+ccarre[ccarre$CountryName=="Macedonia","CountryName"]="North Macedonia"
+ccarre[ccarre$CountryName=="Russia","CountryName"]="Russian Federation"
+ccarre[ccarre$CountryName=="Slovakia","CountryName"]="Slovak Republic"	
+ccarre[ccarre$CountryName=="South Korea","CountryName"]="Korea, Rep."
+ccarre[ccarre$CountryName=="UA Emirates","CountryName"]="United Arab Emirates"
+ccarre[ccarre$CountryName=="UK","CountryName"]="United Kingdom"
+ccarre[ccarre$CountryName=="USA","CountryName"]="United States"
+```
+
+```{r}
+accarre=merge(agsalud,ccarre,all.x=T, all.y=T)
+```
+
+```{r}
+kable(accarre[!complete.cases(accarre),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+```{r}
+accarre=na.omit(accarre)
+```
