@@ -1056,6 +1056,7 @@ library(ggrepel)
 
 fviz_dend(res.diana, cex = 0.5,horiz = T)
 ```
+
 ##Mapa de los casos
 
 ```{r}
