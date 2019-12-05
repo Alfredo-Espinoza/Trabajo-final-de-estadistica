@@ -51,4 +51,10 @@ names(salud)[1]="CountryName"
 
 ```{r}
 EX="https://github.com/claudia1006/PROYECTO/raw/master/Exportaciones%20de%20bienes%20y%20servicios%20(%25%20del%20GDP).xls"
+expo=import(EX)
+expo[,]=lapply(expo[,], trimws,whitespace = "[\\h\\v]") # no blanks
+names(expo)=gsub(" ","",names(expo)) 
+expo$`Expobienesyservicio%delGDP2017`=as.numeric(expo$`Expobienesyservicio%delGDP2017`) #UNO SOLO 
+expo=na.omit(expo) 
+```
 
