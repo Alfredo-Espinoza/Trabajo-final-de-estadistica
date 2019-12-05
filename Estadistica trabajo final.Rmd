@@ -870,6 +870,17 @@ deturb=na.omit(deturb)
 
 deturb es la base que acumula toda la información
 
+#Cambio de nombres
+
+```{r}
+names(deturb)=c("CountryName","electric","empleo","export","internet","expevida","gdpcapita","pbicreci","agua","saludcob","road","litrate","schorate","gastoedu","urbrate","stuteachrat","regimetype")
+```
+
+```{r}
+row.names(deturb)=deturb$CountryName
+```
+
+
 #Confirmando modelo teórico
 Si la exploración apoyaba nuestro marco teórico, podemos proponer cómo construir los indices. Estos índices están inspirados en la teoría de Lipset: A mayor modernidad, más democracia. Bienestar, urbanización, educación y desarrollo económico se usan para tratar de expresar "modernidad".
 Bienestar <- empleo, expevida,  agua, saludcob
