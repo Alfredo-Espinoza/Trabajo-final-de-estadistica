@@ -125,6 +125,17 @@ basevida$"Expectativa de vida en años al nacer (2017)"=as.numeric(basevida$"Exp
 names(basevida)=gsub(" ","",names(basevida))
 ```
 
+#GDP PER CAPITA EN DÓLARES
 
+```{r}
+GDPP="https://github.com/claudia1006/PROYECTO/raw/master/GDP%20PER%20CAPITA%20CURRENT%20%24.xlsx"
+GDP=import(GDPP)
+GDP[,]=lapply(GDP[,], trimws,whitespace = "[\\h\\v]") # no blanks
+names(GDP)[2]="GDP PER CAPITA EN $"
+GDP$`GDP PER CAPITA EN $`=as.numeric(GDP$`GDP PER CAPITA EN $`) #UNO SOLO 
+GDP=na.omit(GDP)
+names(GDP)=gsub(" ","",names(GDP)) 
+GDP=na.omit(GDP) 
+```
 
 
