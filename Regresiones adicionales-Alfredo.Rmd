@@ -1,0 +1,1224 @@
+Se incluye el código de las variables y del factorial confirmativo para que funcionen las pruebas. Marco con un # el inicio de la sección que hice yo como avance.
+
+Cargar variables.
+
+ELECTRICIDAD
+
+```{r}
+library(rio)
+elec="https://github.com/adrianoshimante1998/Trabajo-grupal/raw/master/API_EG.ELC.ACCS.ZS_DS2_en_excel_v2_422316.xls"
+electricidad=import(elec)
+electricidad[,]=lapply(electricidad[,], trimws,whitespace = "[\\h\\v]") # no blanks
+electricidad=na.omit(electricidad)
+names(electricidad)=gsub(" ","",names(electricidad)) 
+electricidad$Electricity2017=as.numeric(electricidad$Electricity2017) #UNO SOLO 
+electricidad=na.omit(electricidad) 
+```
+
+EMPLEO
+
+```{r}
+EMPLEO="https://github.com/claudia1006/PROYECTO/raw/master/%25employment.xls"
+empleo=import(EMPLEO)
+empleo[,]=lapply(empleo[,], trimws,whitespace = "[\\h\\v]") # no blanks
+names(empleo)=gsub(" ","",names(empleo)) 
+empleo$`%Empleo2017`=as.numeric(empleo$`%Empleo2017`) #UNO SOLO 
+empleo=na.omit(empleo) 
+
+```
+
+COBERTURA DE SALUD 
+
+```{r}
+SA="https://github.com/claudia1006/PROYECTO/raw/master/%25%20de%20cobertura%20de%20salud..xlsx"
+salud=import(SA)
+salud[,]=lapply(salud[,], trimws,whitespace = "[\\h\\v]") # no blanks
+names(salud)=gsub(" ","",names(salud)) 
+salud$`%decoberturadesalud2017`=as.numeric(salud$`%decoberturadesalud2017`) #UNO SOLO 
+salud=na.omit(salud) 
+names(salud)[1]="CountryName"
+```
+
+EXPORTACIONES DE BIENES Y SERVICIOS 
+
+```{r}
+EX="https://github.com/claudia1006/PROYECTO/raw/master/Exportaciones%20de%20bienes%20y%20servicios%20(%25%20del%20GDP).xls"
+expo=import(EX)
+expo[,]=lapply(expo[,], trimws,whitespace = "[\\h\\v]") # no blanks
+names(expo)=gsub(" ","",names(expo)) 
+expo$`Expobienesyservicio%delGDP2017`=as.numeric(expo$`Expobienesyservicio%delGDP2017`) #UNO SOLO 
+expo=na.omit(expo) 
+```
+
+% DE POBLACION QUE USA INTERNET 
+
+```{r}
+linkinter="https://github.com/Alfredo-Espinoza/Estadistica-2-Parte-individual-del-trabajo-grupal/raw/master/API_IT.NET.USER.ZS_DS2_en_excel_v2_199844.xlsx"
+internet=import(linkinter)
+#Borrando las columnas de otros años
+internet[2:50]=NULL
+internet[2:12]=NULL
+internet[3:13]=NULL
+
+#Eliminando los NA
+internet=internet[complete.cases(internet),]
+#Cambiando nombres de variables.
+names(internet)[1]="CountryName"
+names(internet)[2]="Porcentaje de la población que usa internet (2017)"
+
+#Eliminando posibles espacios vacios
+internet$CountryName=trimws(internet$CountryName,whitespace = "[\\h\\v]")
+internet$`Porcentaje de la población que usa internet (2017)`=trimws(internet$`Porcentaje de la población que usa internet (2017)`,whitespace = "[\\h\\v]")
+
+#Eliminando primera fila.
+
+internet=internet[-1,]
+
+#Hay observaciones que corresponden a la suciedad de la data. Varias de ellas serán eliminadas una vez se realiza el merge de acuerdo a "Pais" con las variables del grupo de trabajo. El resto tendrán que ser eliminadas manualmente.
+
+#Pasando la variable a numérico
+
+internet$`Porcentaje de la población que usa internet (2017)`=as.numeric(internet$`Porcentaje de la población que usa internet (2017)`)
+names(internet)=gsub(" ","",names(internet))
+```
+
+EXPECTATIVA DE VIDA AL NACER 
+
+```{r}
+linkvida="https://github.com/Alfredo-Espinoza/Estadistica-2-Parte-individual-del-trabajo-grupal/raw/master/API_SP.DYN.LE00.IN_DS2_en_excel_v2_199538.xlsx"
+
+
+basevida=import(linkvida)
+#Borrando columnas innecesarias
+basevida[2:50]=NULL
+basevida[2:12]=NULL
+basevida[3:13]=NULL
+
+#Borramos los NAs
+
+basevida=basevida[complete.cases(basevida),]
+
+#Cambiando nombres de variable
+
+names(basevida)[1]="CountryName"
+names(basevida)[2]="Expectativa de vida en años al nacer (2017)"
+
+#Eliminamos la primera fila, porque es producto de la suciedad de losd atos.
+basevida=basevida[-c(1),]
+
+#Eliminando posibles espacios vacios
+
+basevida$CountryName=trimws(basevida$CountryName,whitespace = "[\\h\\v]")
+basevida$`Expectativa de vida en años al nacer (2017)`=trimws(basevida$`Expectativa de vida en años al nacer (2017)`,whitespace = "[\\h\\v]")
+
+#Pasando a numérico la variable a estudiar
+
+basevida$"Expectativa de vida en años al nacer (2017)"=as.numeric(basevida$"Expectativa de vida en años al nacer (2017)")
+names(basevida)=gsub(" ","",names(basevida))
+```
+
+GDP PER CAPITA EN DÓLARES
+
+```{r}
+GDPP="https://github.com/claudia1006/PROYECTO/raw/master/GDP%20PER%20CAPITA%20CURRENT%20%24.xlsx"
+GDP=import(GDPP)
+GDP[,]=lapply(GDP[,], trimws,whitespace = "[\\h\\v]") # no blanks
+names(GDP)[2]="GDP PER CAPITA EN $"
+GDP$`GDP PER CAPITA EN $`=as.numeric(GDP$`GDP PER CAPITA EN $`) #UNO SOLO 
+GDP=na.omit(GDP)
+names(GDP)=gsub(" ","",names(GDP)) 
+GDP=na.omit(GDP) 
+```
+
+ACCESO BASICO AL AGUA
+
+```{r}
+AGUA="https://github.com/claudia1006/PROYECTO/raw/master/ACCESO.xls"
+agua=import(AGUA)
+agua[,]=lapply(agua[,], trimws,whitespace = "[\\h\\v]") # no blanks
+names(agua)=gsub(" ","",names(agua))
+agua$`Accesoalagua(en%)2017`=as.numeric(agua$`Accesoalagua(en%)2017`) #UNO SOLO 
+agua$...3=NULL
+agua=na.omit(agua)
+```
+
+CRECIMIENTO DEL PBI
+
+```{r}
+CRE="https://github.com/Alfredo-Espinoza/Estadistica-2-Parte-individual-del-trabajo-grupal/raw/master/crecimiento%20bm.xlsx"
+crepbi=import(CRE)
+crepbi[,]=lapply(crepbi[,], trimws,whitespace = "[\\h\\v]") # no blanks
+names(crepbi)=gsub(" ","",names(crepbi))
+```
+
+```{r}
+crepbi$`2017`=as.numeric(crepbi$`2017`)
+```
+
+```{r}
+crepbi$CountryCode=NULL
+```
+```{r}
+names(crepbi)[2]="CrecimientoPBI2017"
+```
+
+
+CALIDAD DE CARRETERAS 
+
+```{r}
+CARRE="https://github.com/claudia1006/PROYECTO/raw/master/calidad%20de%20carreteras.xlsx"
+ccarre=import(CARRE)
+ccarre[,]=lapply(ccarre[,], trimws,whitespace = "[\\h\\v]") # no blanks
+ccarre$`Road quality`=as.numeric(ccarre$`Road quality`) #UNO SOLO'
+names(ccarre)=gsub(" ","",names(ccarre))
+```
+
+```{r}
+#eliminando numero adelante 
+library(stringr)
+splitted= str_split(ccarre$Country,
+                    pattern = '\\s',
+                    simplify = T)[,-1]
+```
+
+```{r}
+#uniendo los nombres 
+ccarre$Country=trimws(paste(splitted[,1],splitted[,2],splitted[,3]),whitespace = "[\\h\\v]")
+names(ccarre)[1]="CountryName"
+```
+
+```{r}
+summary(agua)
+summary(basevida)
+summary(ccarre)
+summary(crepbi)
+summary(electricidad)
+summary(empleo)
+summary(expo)
+summary(GDP)
+summary(internet)
+summary(salud)
+```
+
+DEMOCRACIA
+
+```{r}
+library(rio)
+library(htmltab)
+index="https://github.com/claudia1006/PROYECTO/raw/master/Democracy.xlsx"
+de=import(index, which=2)
+```
+
+
+```{r}
+#sacando nombres raros 
+library(stringr)
+names(de)=str_replace_all(names(de), "[^[:ascii:]]", "") 
+```
+
+```{r}
+#sacando valores raros 
+de[,]=lapply(de[,], str_replace_all,"[^[:ascii:]]","")
+```
+
+```{r}
+#Reemplazar espacios en blanco por nada 
+names(de)=gsub(" ","",names(de)) 
+names(de)
+```
+```{r}
+#no blanks
+de[,]=lapply(de[,], trimws,whitespace = "[\\h\\v]") 
+str(de)
+```
+```{r}
+de=na.omit(de)
+```
+
+```{r}
+names(de)[2]="Regime type"
+names(de)[1]="CountryName"
+```
+
+```{r}
+row.names(de)=de$Country
+```
+
+```{r}
+library(dplyr)
+de$`Regime type`=recode(de$`Regime type`,
+       'Full democracies'='1',
+       'Flawed democracy'='1',
+       'Hybrid regime'='0',
+       'Authoritarian'='0')
+de$`Regime type`=as.ordered(de$`Regime type`)
+```
+
+ALFABETIZACION
+
+```{r}
+library(htmltab)
+literacy2=htmltab(doc="https://www.worldatlas.com/articles/the-highest-literacy-rates-in-the-world.html", which='//*[@id="artReg-table"]/table')
+```
+
+```{r}
+literacy2$Rank=NULL
+```
+
+```{r}
+names(literacy2)=c("Country", "Literacy Rate")
+```
+
+```{r}
+literacy2$Country=trimws(literacy2$Country,whitespace = "[\\h\\v]")
+```
+
+```{r}
+literacy2$`Literacy Rate`[literacy2$`Literacy Rate`=="NA"]<-NA
+```
+
+```{r}
+literacy2=na.omit(literacy2)
+```
+
+```{r}
+library(stringr)
+literacy2$`Literacy Rate`=gsub('%',"",literacy2$`Literacy Rate`)
+```
+
+```{r}
+literacy2[-1]=lapply(literacy2[-1], as.numeric)
+```
+
+```{r}
+literacy2=na.omit(literacy2)
+```
+
+```{r}
+str(literacy2)
+```
+
+```{r}
+names(literacy2)=c("CountryName","LitRate")
+```
+
+SCHOOLING
+
+```{r}
+lkXLSX="https://github.com/Geanze/TRABAJO-GRUPAL-ESTAD2/raw/master/education-index.xlsx"
+Schooling=import(lkXLSX)
+```
+
+```{r}
+str(Schooling)
+```
+
+```{r}
+Schooling$`HDI Rank`=NULL
+Schooling$`1980`=NULL
+Schooling$`1985`=NULL
+Schooling$`1990`=NULL
+Schooling$`1995`=NULL
+Schooling$`2000`=NULL
+Schooling$`2005`=NULL
+Schooling$`2006`=NULL
+Schooling$`2007`=NULL
+Schooling$`2008`=NULL
+Schooling$`2009`=NULL
+Schooling$`2010`=NULL
+Schooling$`2011`=NULL
+Schooling$`2012`=NULL
+```
+
+```{r}
+names(Schooling)=c("CountryName", "SchoRate")
+```
+
+```{r}
+Schooling[c(2)]= lapply(Schooling[c(2)], as.numeric)
+```
+
+```{r}
+Schooling[complete.cases(Schooling),]
+Schooling=na.omit(Schooling)
+```
+
+INVERSION EN EDUCACION
+
+```{r}
+library(rio)
+InvestEdu2=import("https://github.com/Geanze/TRABAJO-GRUPAL-ESTAD2/raw/master/InvestPBIEducation.xls")
+InvestEdu2$`Año de data`=NULL
+InvestEdu2$`Country Code`=NULL
+names(InvestEdu2)=c("CountryName", "ExpendEdu")
+```
+
+```{r}
+InvestEdu2=na.omit(InvestEdu2)
+```
+
+
+URBANIZACION
+```{r}
+lkXLS="https://github.com/Geanze/TRABAJO-GRUPAL-ESTAD2/raw/master/WUP2018-F01-Total_Urban_Rural.xls"
+urban=import(lkXLS)
+```
+
+```{r}
+str(urban)
+```
+
+```{r}
+urban$Urban=NULL
+urban$Rural=NULL
+urban$Total=NULL
+```
+
+```{r}
+names(urban)=c("CountryName", "UrbRate")
+```
+
+```{r}
+urban[complete.cases(urban),]
+urban[c(1)]=lapply(urban[c(1)], trimws,whitespace = "[\\h\\v]")
+```
+
+Porcentaje de número de estudiantes por profesor en cada país (invertida)
+
+```{r}
+library(rio)
+studTeach=import("https://github.com/Geanze/TRABAJO-GRUPAL-ESTAD2/raw/master/StudTeachRatio.xls")
+```
+
+```{r}
+studTeach$`Año de data`=NULL
+studTeach$`Country Code`=NULL
+```
+
+```{r}
+names(studTeach)=c("CountryName", "StuTeachRat")
+```
+
+```{r}
+complete.cases(studTeach)
+```
+
+```{r}
+studTeach=na.omit(studTeach)
+```
+
+```{r}
+studTeach$StuTeachRat=100-studTeach$StuTeachRat
+```
+
+```{r}
+studTeach[2]==lapply(studTeach[2], as.numeric)
+```
+
+```{r}
+complete.cases(studTeach)
+```
+
+```{r}
+str(studTeach)
+```
+
+
+Merge de las variables. Se modificará el nombre de los países para maximizar las combinaciones.
+
+```{r}
+
+elecem=merge(electricidad,empleo,all.x=T, all.y=T)
+
+```
+
+```{r}
+elecem[!complete.cases(elecem),]
+```
+
+
+```{r}
+library(knitr)
+library(kableExtra)
+kable(elecem[!complete.cases(elecem),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+```{r}
+elecem=na.omit(elecem)
+```
+
+Se pierden países por falta de datos
+
+```{r}
+elexpo=merge(elecem,expo,all.x=T, all.y=T)
+```
+
+```{r}
+kable(elexpo[!complete.cases(elexpo),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+```{r}
+elexpo=na.omit(elexpo)
+```
+
+Con internet
+```{r}
+elein=merge(elexpo,internet,all.x=T, all.y=T)
+
+```
+
+```{r}
+kable(elein[!complete.cases(elein),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+Se pierden por falta de datos
+
+```{r}
+elein=na.omit(elein)
+```
+
+Con basevida
+
+```{r}
+elvida=merge(elein,basevida,all.x=T, all.y=T)
+```
+
+```{r}
+kable(elvida[!complete.cases(elvida),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+Falta de datos
+
+```{r}
+elvida=na.omit(elvida)
+```
+
+Con GDP
+
+```{r}
+elgdp=merge(elvida,GDP,all.x=T, all.y=T)
+```
+
+```{r}
+kable(elgdp[!complete.cases(elgdp),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+Se pierden casos por falta de datos.
+
+```{r}
+elgdp=na.omit(elgdp)
+```
+
+Con crepbi
+
+```{r}
+elcrep=merge(elgdp,crepbi,all.x=T, all.y=T)
+
+```
+
+```{r}
+kable(elcrep[!complete.cases(elcrep),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+Se pierden casos por falta de datos
+
+```{r}
+elcrep=na.omit(elcrep)
+```
+
+Con agua
+```{r}
+elagua=merge(elcrep,agua,all.x=T, all.y=T)
+
+```
+
+
+```{r}
+kable(elagua[!complete.cases(elagua),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+Se pierden casos por falta de datos
+
+```{r}
+elagua=na.omit(elagua)
+```
+
+Con salud
+
+```{r}
+agsalud=merge(elagua,salud,all.x=T, all.y=T)
+```
+
+```{r}
+kable(agsalud[!complete.cases(agsalud),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+Codigo de cambio
+
+```{r}
+salud[salud$CountryName=="Bahamas","CountryName"]="Bahamas, The"
+salud[salud$CountryName=="Bolivia (Plurinational State of)","CountryName"]="Bolivia"
+salud[salud$CountryName=="Congo","CountryName"]="Congo, Rep."
+salud[salud$CountryName=="Côte d'Ivoire","CountryName"]="Cote d'Ivoire"
+salud[salud$CountryName=="Czechia","CountryName"]="Czech Republic"
+salud[salud$CountryName=="Democratic Republic of the Congo","CountryName"]="Congo, Dem. Rep."
+salud[salud$CountryName=="Egypt","CountryName"]="Egypt, Arab Rep."
+salud[salud$CountryName=="Gambia","CountryName"]="Gambia, The"
+salud[salud$CountryName=="Iran (Islamic Republic of)","CountryName"]="Iran, Islamic Rep."
+salud[salud$CountryName=="Republic of Korea","CountryName"]="Korea, Rep."
+salud[salud$CountryName=="Kyrgyzstan","CountryName"]="Kyrgyz Republic"
+salud[salud$CountryName=="Lao People's Democratic Republic","CountryName"]="Lao PDR"
+salud[salud$CountryName=="Republic of North Macedonia","CountryName"]="North Macedonia"
+salud[salud$CountryName=="Republic of Moldova","CountryName"]="Moldova"
+salud[salud$CountryName=="Slovakia","CountryName"]="Slovak Republic"
+salud[salud$CountryName=="Saint Vincent and the Grenadines","CountryName"]="St. Vincent and the Grenadines"
+salud[salud$CountryName=="United Kingdom of Great Britain and Northern Ireland","CountryName"]="United Kingdom"
+salud[salud$CountryName=="United Republic of Tanzania","CountryName"]="Tanzania"
+salud[salud$CountryName=="United States of America","CountryName"]="United States"
+salud[salud$CountryName=="Viet Nam","CountryName"]="Vietnam"
+```
+
+```{r}
+agsalud=merge(elagua,salud,all.x=T, all.y=T)
+```
+
+```{r}
+kable(agsalud[!complete.cases(agsalud),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+Falta de datos
+
+```{r}
+agsalud=na.omit(agsalud)
+```
+
+Con ccarre
+```{r}
+accarre=merge(agsalud,ccarre,all.x=T, all.y=T)
+```
+
+```{r}
+kable(accarre[!complete.cases(accarre),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+```{r}
+ccarre[ccarre$CountryName=="Bosnia & Herz.","CountryName"]="Bosnia and Herzegovina"
+ccarre[ccarre$CountryName=="Brunei","CountryName"]="Brunei Darussalam"
+ccarre[ccarre$CountryName=="Cape Verde","CountryName"]="Cabo Verde"
+ccarre[ccarre$CountryName=="Czech Rep.","CountryName"]="Czech Republic"
+ccarre[ccarre$CountryName=="Czech Rep.","CountryName"]="Czech Republic"
+ccarre[ccarre$CountryName=="Domin. Rep.","CountryName"]="Dominican Republic"
+ccarre[ccarre$CountryName=="DR Congo","CountryName"]="Congo, Dem. Rep."
+ccarre[ccarre$CountryName=="Egypt","CountryName"]="Egypt, Arab Rep."
+ccarre[ccarre$CountryName=="Gambia","CountryName"]="Gambia, The"
+ccarre[ccarre$CountryName=="Iran","CountryName"]="Iran, Islamic Rep."
+ccarre[ccarre$CountryName=="Ivory Coast","CountryName"]="Cote d'Ivoire"
+ccarre[ccarre$CountryName=="Kyrgyzstan","CountryName"]="Kyrgyz Republic"
+ccarre[ccarre$CountryName=="Laos","CountryName"]="Lao PDR"
+ccarre[ccarre$CountryName=="Macedonia","CountryName"]="North Macedonia"
+ccarre[ccarre$CountryName=="Russia","CountryName"]="Russian Federation"
+ccarre[ccarre$CountryName=="Slovakia","CountryName"]="Slovak Republic"	
+ccarre[ccarre$CountryName=="South Korea","CountryName"]="Korea, Rep."
+ccarre[ccarre$CountryName=="UA Emirates","CountryName"]="United Arab Emirates"
+ccarre[ccarre$CountryName=="UK","CountryName"]="United Kingdom"
+ccarre[ccarre$CountryName=="USA","CountryName"]="United States"
+```
+
+```{r}
+accarre=merge(agsalud,ccarre,all.x=T, all.y=T)
+```
+
+```{r}
+kable(accarre[!complete.cases(accarre),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+```{r}
+accarre=na.omit(accarre)
+```
+
+Con literacy2
+
+```{r}
+aclit=merge(accarre,literacy2,all.x=T, all.y=T)
+```
+
+```{r}
+kable(aclit[!complete.cases(aclit),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+```{r}
+literacy2[literacy2$CountryName=="Bolivia (Plurinational State of)","CountryName"]="Bolivia"
+literacy2[literacy2$CountryName=="Côte d'Ivoire","CountryName"]="Cote d'Ivoire"
+literacy2[literacy2$CountryName=="Democratic Republic of the Congo","CountryName"]="Congo, Dem. Rep."
+literacy2[literacy2$CountryName=="Egypt","CountryName"]="Egypt, Arab Rep."
+literacy2[literacy2$CountryName=="Gambia","CountryName"]="Gambia, The"
+literacy2[literacy2$CountryName=="Iran (Islamic Republic of)","CountryName"]="Iran, Islamic Rep."
+literacy2[literacy2$CountryName=="Kyrgyzstan","CountryName"]="Kyrgyz Republic"
+literacy2[literacy2$CountryName=="Lao People's Democratic Republic","CountryName"]="Lao PDR"
+literacy2[literacy2$CountryName=="Republic of Korea","CountryName"]="Korea, Rep."
+literacy2[literacy2$CountryName=="Slovakia","CountryName"]="Slovak Republic"
+literacy2[literacy2$CountryName=="The former Yugoslav Republic of Macedonia","CountryName"]="North Macedonia"
+literacy2[literacy2$CountryName=="Viet Nam","CountryName"]="Vietnam"
+literacy2[literacy2$CountryName=="Republic of Moldova","CountryName"]="Moldova"
+literacy2[literacy2$CountryName=="United Republic of Tanzania","CountryName"]="Tanzania"
+```
+
+```{r}
+aclit=merge(accarre,literacy2,all.x=T, all.y=T)
+```
+
+```{r}
+kable(aclit[!complete.cases(aclit),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+```{r}
+aclit=na.omit(aclit)
+```
+
+Con Schooling
+
+```{r}
+clischol=merge(aclit,Schooling,all.x=T, all.y=T)
+```
+
+```{r}
+kable(clischol[!complete.cases(clischol),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+```{r}
+Schooling[Schooling$CountryName=="Bolivia (Plurinational State of)","CountryName"]="Bolivia"
+Schooling[Schooling$CountryName=="Cape Verde","CountryName"]="Cabo Verde"
+Schooling[Schooling$CountryName=="Congo (Democratic Republic of the)","CountryName"]="Congo, Dem. Rep."
+Schooling[Schooling$CountryName=="Egypt","CountryName"]="Egypt, Arab Rep."
+Schooling[Schooling$CountryName=="Gambia","CountryName"]="Gambia, The"
+Schooling[Schooling$CountryName=="Iran (Islamic Republic of)","CountryName"]="Iran, Islamic Rep."
+Schooling[Schooling$CountryName=="Korea (Republic of)","CountryName"]="Korea, Rep."
+Schooling[Schooling$CountryName=="Kyrgyzstan","CountryName"]="Kyrgyz Republic"
+Schooling[Schooling$CountryName=="Lao People's Democratic Republic","CountryName"]="Lao PDR"
+Schooling[Schooling$CountryName=="Moldova (Republic of)","CountryName"]="Moldova"
+Schooling[Schooling$CountryName=="Slovakia","CountryName"]="Slovak Republic"
+Schooling[Schooling$CountryName=="Tanzania (United Republic of)","CountryName"]="Tanzania"
+Schooling[Schooling$CountryName=="The former Yugoslav Republic of Macedonia","CountryName"]="North Macedonia"
+```
+
+```{r}
+clischol=merge(aclit,Schooling,all.x=T, all.y=T)
+```
+
+```{r}
+kable(clischol[!complete.cases(clischol),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+```{r}
+clischol=na.omit(clischol)
+```
+
+Con InvestEdu2
+
+```{r}
+invcli=merge(clischol,InvestEdu2,all.x=T, all.y=T)
+```
+
+```{r}
+kable(invcli[!complete.cases(invcli),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+Se pierden casos por falta de datos
+
+```{r}
+invcli=na.omit(invcli)
+```
+
+Con urban
+
+```{r}
+invurb=merge(invcli,urban,all.x=T, all.y=T)
+```
+
+```{r}
+kable(invurb[!complete.cases(invurb),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+```{r}
+urban[urban$CountryName=="Bolivia (Plurinational State of)","CountryName"]="Bolivia"
+urban[urban$CountryName=="Côte d'Ivoire","CountryName"]="Cote d'Ivoire"
+urban[urban$CountryName=="Czechia","CountryName"]="Czech Republic"
+urban[urban$CountryName=="Democratic Republic of the Congo","CountryName"]="Congo, Dem. Rep."
+urban[urban$CountryName=="Gambia","CountryName"]="Gambia, The"
+urban[urban$CountryName=="Iran (Islamic Republic of)","CountryName"]="Iran, Islamic Rep."
+urban[urban$CountryName=="Kyrgyzstan","CountryName"]="Kyrgyz Republic"
+urban[urban$CountryName=="Lao People's Democratic Republic","CountryName"]="Lao PDR"
+urban[urban$CountryName=="Slovakia","CountryName"]="Slovak Republic"
+urban[urban$CountryName=="United Republic of Tanzania","CountryName"]="Tanzania"
+urban[urban$CountryName=="United States of America","CountryName"]="United States"
+urban[urban$CountryName=="Republic of Moldova","CountryName"]="Moldova"
+urban[urban$CountryName=="Viet Nam","CountryName"]="Vietnam"
+```
+
+```{r}
+invurb=merge(invcli,urban,all.x=T, all.y=T)
+```
+
+```{r}
+kable(invurb[!complete.cases(invurb),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+```{r}
+invurb=na.omit(invurb)
+```
+
+Con studTeach
+
+```{r}
+sturb=merge(invurb,studTeach,all.x=T, all.y=T)
+```
+
+```{r}
+kable(sturb[!complete.cases(sturb),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+Falta de datos
+```{r}
+sturb=na.omit(sturb)
+```
+
+sturb es la base final por ahora.
+
+Añadimos la dependiente de democracia
+```{r}
+deturb=merge(sturb,de,all.x=T, all.y=T)
+```
+
+```{r}
+kable(deturb[!complete.cases(deturb),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+```{r}
+de[de$CountryName=="Democratic Republic of Congo","CountryName"]="Congo, Dem. Rep."
+de[de$CountryName=="Cte dIvoire","CountryName"]="Cote d'Ivoire"
+de[de$CountryName=="Gambia","CountryName"]="Gambia, The"
+de[de$CountryName=="Iran","CountryName"]="Iran, Islamic Rep."
+de[de$CountryName=="Laos","CountryName"]="Lao PDR"
+de[de$CountryName=="Russia","CountryName"]="Russian Federation"
+de[de$CountryName=="Slovakia","CountryName"]="Slovak Republic"
+de[de$CountryName=="United States of America","CountryName"]="United States"
+
+```
+
+```{r}
+deturb=merge(sturb,de,all.x=T, all.y=T)
+```
+
+```{r}
+kable(deturb[!complete.cases(deturb),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+```{r}
+deturb=na.omit(deturb)
+```
+
+deturb es la base que acumula toda la información
+
+
+```{r}
+names(deturb)=c("CountryName","electric","empleo","export","internet","expevida","gdpcapita","pbicreci","agua","saludcob","road","litrate","schorate","gastoedu","urbrate","stuteachrat","regimetype")
+```
+
+```{r}
+row.names(deturb)=deturb$CountryName
+```
+
+
+Confirmando modelo teórico
+Si la exploración apoyaba nuestro marco teórico, podemos proponer cómo construir los indices. Estos índices están inspirados en la teoría de Lipset: A mayor modernidad, más democracia. Bienestar, urbanización, educación y desarrollo económico se usan para tratar de expresar "modernidad".
+Bienestar <- empleo, expevida,  agua, saludcob
+Urbanización <- urbrate, electric, internet, road
+Educación <- litrate, schorate, gastoedu, stuteachrat
+Desarrollo económico <- pbicreci, gdpcapita, export
+
+```{r}
+model <- 'bienestar  =~ empleo + expevida + agua + saludcob
+          urbanizacion =~ urbrate + electric + internet + road
+          educacion   =~ litrate + schorate + gastoedu + stuteachrat
+          desarrolloecon   =~ pbicreci + gdpcapita + export'
+```
+
+Ahora vemos qué arroja el modelo:
+
+Normalización
+
+```{r}
+# normalizar las variables a valor z:
+deturb2=scale(deturb[,-c(1,17)])
+
+library(lavaan)
+```
+
+```{r}
+cfa_fit <- cfa(model, data=deturb2, 
+           std.lv=TRUE,  
+           missing="fiml")
+```
+
+Preparo los tests:
+```{r}
+allParamCFA=parameterEstimates(cfa_fit,standardized = T)
+allFitCFA=as.list(fitMeasures(cfa_fit))
+```
+
+Veamos resultados:
+
+Si cada indicador tiene una buena conexión con su latente (ver p valor):
+```{r}
+library(knitr)
+kable(allParamCFA[allParamCFA$op=="=~",])
+```
+
+Averigüemos qué tan bien salió el modelo:
+
+El ChiSquare es NO significativo (p_value debe ser mayor a 0.05 para que sea bueno)?
+```{r}
+allFitCFA[c("chisq", "df", "pvalue")] # pvalue>0.05
+```
+Sale mal
+
+El Índice Tucker Lewi es mayor a 0.9?
+```{r}
+allFitCFA$tli # > 0.90
+```
+Sale mal
+
+La Raíz del error cuadrático medio de aproximación es menor a 0.05?
+```{r}
+allFitCFA[c('rmsea.ci.lower','rmsea' ,'rmsea.ci.upper')] # 0.05 en el Int de Conf?
+```
+Sale mal
+
+Añadimos los índices a la data de indicadores:
+```{r}
+deturb=as.data.frame(cbind(deturb,lavPredict(cfa_fit)))
+```
+
+Veamos un resumen:
+```{r}
+summary(deturb)
+```
+
+Referencia
+
+```{r}
+# original
+table(deturb$regimetype)
+```
+1 es democracia. Está bien el orden.
+```{r}
+# como numero
+table(as.numeric(deturb$regimetype))
+```
+
+
+Regresion logistica multivariada
+
+```{r}
+str(deturb)
+```
+
+
+```{r}
+### semilla
+
+set.seed(2019)
+
+### primer modelo:
+#data como subset
+vars1=deturb[,c("regimetype","bienestar","urbanizacion","educacion","desarrolloecon")]
+
+#regresion
+rlog1=glm(regimetype~., data=vars1,family = binomial)
+
+#resultado clásico:
+summary(rlog1)
+```
+
+Veamos ahora el resultado con mejor formato:
+```{r, results='asis'}
+library(stargazer)
+#resultado
+stargazer(rlog1,type="html")
+```
+
+#Regresiones individuales, que no fueron usadas en el trabajo final
+```{r}
+### semilla
+
+set.seed(2019)
+
+#Modelos individuales y modelo descompuesto
+
+regbienestar=deturb[,c("regimetype","bienestar")] #solo un índice
+regurba=deturb[,c("regimetype","urbanizacion")] #solo un índice
+regedu=deturb[,c("regimetype","educacion")] #solo un índice
+regecon=deturb[,c("regimetype","desarrolloecon")] #solo un índice
+regsepa=deturb[,-c(1,18,19,20,21,22)] #los índices descompuestos
+```
+
+
+```{r}
+rlog2=glm(regimetype~., data=regbienestar,family = binomial)
+
+#resultado clásico:
+summary(rlog2)
+```
+
+```{r}
+rlog3=glm(regimetype~., data=regurba,family = binomial)
+
+#resultado clásico:
+summary(rlog3)
+```
+
+```{r}
+rlog4=glm(regimetype~., data=regedu,family = binomial)
+
+#resultado clásico:
+summary(rlog4)
+```
+
+```{r}
+rlog5=glm(regimetype~., data=regecon,family = binomial)
+
+#resultado clásico:
+summary(rlog5)
+```
+
+```{r}
+rlog6=glm(regimetype~., data=regsepa,family = binomial)
+
+#resultado clásico:
+summary(rlog6)
+```
+
+
+Todos los stargazers
+
+```{r, results='asis'}
+library(stargazer)
+#resultado
+stargazer(rlog1,type="html")
+```
+
+```{r, results='asis'}
+library(stargazer)
+#resultado
+stargazer(rlog2,type="html")
+```
+
+```{r, results='asis'}
+library(stargazer)
+#resultado
+stargazer(rlog3,type="html")
+```
+
+```{r, results='asis'}
+library(stargazer)
+#resultado
+stargazer(rlog4,type="html")
+```
+
+```{r, results='asis'}
+library(stargazer)
+#resultado
+stargazer(rlog5,type="html")
+```
+
+```{r, results='asis'}
+library(stargazer)
+#resultado
+stargazer(rlog6,type="html")
+```
+
+Comparando modelos
+Dos "modelos", 1 y 6, uno en índices y otro por separado.
+```{r}
+library(lmtest)
+
+lrtest(rlog1,rlog6)
+```
+
+```{r}
+library(lmtest)
+
+lrtest(rlog6,rlog1)
+```
+
+```{r}
+library(lmtest)
+
+lrtest(rlog1,rlog2)
+```
+
+```{r}
+library(lmtest)
+
+lrtest(rlog1,rlog3)
+```
+
+```{r}
+library(lmtest)
+
+lrtest(rlog1,rlog4)
+```
+
+```{r}
+library(lmtest)
+
+lrtest(rlog1,rlog5)
+```
+
+```{r}
+predicted1 <- plogis(predict(rlog1, vars1[,-1]))
+```
+
+```{r}
+library(InformationValue)
+confusionMatrix(vars1$regimetype, predicted1)
+```
+
+Predice razonablemene bien?
+
+
+Dos medidas importantes es saber qué tanto acertamos predecir el evento:
+```{r}
+sensitivity(actuals = as.numeric(vars1$regimetype),predictedScores = predicted1)
+
+```
+
+Y qué tanto acertamos predecir la no ocurrencia del evento:
+```{r}
+specificity(actuals = as.numeric(vars1$regimetype),predictedScores = predicted1)
+
+```
+
+
+ODDS RATIO
+```{r}
+exp(cbind(OR = coef(rlog1), confint(rlog1)))
+
+```
+
+
+Efectos marginales
+
+```{r}
+# interpracion usando marginal effects:
+library(margins)
+# 
+(modellog1 = margins(rlog1))
+```
+
+```{r}
+(margins=summary(modellog1))
+
+```
+
+Modelo sin índices
+```{r}
+predicted2 <- plogis(predict(rlog6, regsepa[,-16]))
+```
+
+```{r}
+library(InformationValue)
+confusionMatrix(regsepa$regimetype, predicted2)
+```
+
+Predice razonablemene bien?
+
+
+Dos medidas importantes es saber qué tanto acertamos predecir el evento:
+```{r}
+sensitivity(actuals = as.numeric(regsepa$regimetype),predictedScores = predicted2)
+
+```
+
+Y qué tanto acertamos predecir la no ocurrencia del evento:
+```{r}
+specificity(actuals = as.numeric(regsepa$regimetype),predictedScores = predicted2)
+
+```
+
+
+ODDS RATIO
+```{r}
+exp(cbind(OR = coef(rlog6), confint(rlog6)))
+
+```
+
+
+Efectos marginales
+
+```{r}
+# interpracion usando marginal effects:
+library(margins)
+# 
+(modellog6 = margins(rlog6))
+```
+
+```{r}
+(margins=summary(modellog6))
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
