@@ -58,3 +58,73 @@ expo$`Expobienesyservicio%delGDP2017`=as.numeric(expo$`Expobienesyservicio%delGD
 expo=na.omit(expo) 
 ```
 
+#% DE POBLACION QUE USA INTERNET 
+
+```{r}
+linkinter="https://github.com/Alfredo-Espinoza/Estadistica-2-Parte-individual-del-trabajo-grupal/raw/master/API_IT.NET.USER.ZS_DS2_en_excel_v2_199844.xlsx"
+internet=import(linkinter)
+#Borrando las columnas de otros años
+internet[2:50]=NULL
+internet[2:12]=NULL
+internet[3:13]=NULL
+
+#Eliminando los NA
+internet=internet[complete.cases(internet),]
+#Cambiando nombres de variables.
+names(internet)[1]="CountryName"
+names(internet)[2]="Porcentaje de la población que usa internet (2017)"
+
+#Eliminando posibles espacios vacios
+internet$CountryName=trimws(internet$CountryName,whitespace = "[\\h\\v]")
+internet$`Porcentaje de la población que usa internet (2017)`=trimws(internet$`Porcentaje de la población que usa internet (2017)`,whitespace = "[\\h\\v]")
+
+#Eliminando primera fila.
+
+internet=internet[-1,]
+
+#Hay observaciones que corresponden a la suciedad de la data. Varias de ellas serán eliminadas una vez se realiza el merge de acuerdo a "Pais" con las variables del grupo de trabajo. El resto tendrán que ser eliminadas manualmente.
+
+#Pasando la variable a numérico
+
+internet$`Porcentaje de la población que usa internet (2017)`=as.numeric(internet$`Porcentaje de la población que usa internet (2017)`)
+names(internet)=gsub(" ","",names(internet))
+```
+
+#EXPECTATIVA DE VIDA AL NACER 
+
+```{r}
+linkvida="https://github.com/Alfredo-Espinoza/Estadistica-2-Parte-individual-del-trabajo-grupal/raw/master/API_SP.DYN.LE00.IN_DS2_en_excel_v2_199538.xlsx"
+
+
+basevida=import(linkvida)
+#Borrando columnas innecesarias
+basevida[2:50]=NULL
+basevida[2:12]=NULL
+basevida[3:13]=NULL
+
+#Borramos los NAs
+
+basevida=basevida[complete.cases(basevida),]
+
+#Cambiando nombres de variable
+
+names(basevida)[1]="CountryName"
+names(basevida)[2]="Expectativa de vida en años al nacer (2017)"
+
+#Eliminamos la primera fila, porque es producto de la suciedad de losd atos.
+basevida=basevida[-c(1),]
+
+#Eliminando posibles espacios vacios
+
+basevida$CountryName=trimws(basevida$CountryName,whitespace = "[\\h\\v]")
+basevida$`Expectativa de vida en años al nacer (2017)`=trimws(basevida$`Expectativa de vida en años al nacer (2017)`,whitespace = "[\\h\\v]")
+
+#Pasando a numérico la variable a estudiar
+
+basevida$"Expectativa de vida en años al nacer (2017)"=as.numeric(basevida$"Expectativa de vida en años al nacer (2017)")
+names(basevida)=gsub(" ","",names(basevida))
+```
+
+
+
+
