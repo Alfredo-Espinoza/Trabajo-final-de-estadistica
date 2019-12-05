@@ -23,5 +23,15 @@ electricidad$Electricity2017=as.numeric(electricidad$Electricity2017) #UNO SOLO
 electricidad=na.omit(electricidad) 
 ```
 
+#EMPLEO
 
+```{r}
+EMPLEO="https://github.com/claudia1006/PROYECTO/raw/master/%25employment.xls"
+empleo=import(EMPLEO)
+empleo[,]=lapply(empleo[,], trimws,whitespace = "[\\h\\v]") # no blanks
+names(empleo)=gsub(" ","",names(empleo)) 
+empleo$`%Empleo2017`=as.numeric(empleo$`%Empleo2017`) #UNO SOLO 
+empleo=na.omit(empleo) 
+
+```
 
