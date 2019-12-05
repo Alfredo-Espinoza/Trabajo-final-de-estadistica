@@ -159,4 +159,20 @@ crepbi[,]=lapply(crepbi[,], trimws,whitespace = "[\\h\\v]") # no blanks
 names(crepbi)=gsub(" ","",names(crepbi))
 ```
 
+```{r}
+crepbi$`2017`=as.numeric(crepbi$`2017`)
+```
 
+```{r}
+crepbi$CountryCode=NULL
+```
+```{r}
+names(crepbi)[2]="CrecimientoPBI2017"
+```
+
+
+#CALIDAD DE CARRETERAS 
+
+```{r}
+CARRE="https://github.com/claudia1006/PROYECTO/raw/master/calidad%20de%20carreteras.xlsx"
+ccarre=import(CARRE)
