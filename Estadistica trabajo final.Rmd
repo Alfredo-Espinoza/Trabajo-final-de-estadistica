@@ -261,3 +261,172 @@ de$`Regime type`=recode(de$`Regime type`,
        'Authoritarian'='0')
 de$`Regime type`=as.ordered(de$`Regime type`)
 ```
+
+#ALFABETIZACION
+
+```{r}
+library(htmltab)
+literacy2=htmltab(doc="https://www.worldatlas.com/articles/the-highest-literacy-rates-in-the-world.html", which='//*[@id="artReg-table"]/table')
+```
+
+```{r}
+literacy2$Rank=NULL
+```
+
+```{r}
+names(literacy2)=c("Country", "Literacy Rate")
+```
+
+```{r}
+literacy2$Country=trimws(literacy2$Country,whitespace = "[\\h\\v]")
+```
+
+```{r}
+literacy2$`Literacy Rate`[literacy2$`Literacy Rate`=="NA"]<-NA
+```
+
+```{r}
+literacy2=na.omit(literacy2)
+```
+
+```{r}
+library(stringr)
+literacy2$`Literacy Rate`=gsub('%',"",literacy2$`Literacy Rate`)
+```
+
+```{r}
+literacy2[-1]=lapply(literacy2[-1], as.numeric)
+```
+
+```{r}
+literacy2=na.omit(literacy2)
+```
+
+```{r}
+str(literacy2)
+```
+
+```{r}
+names(literacy2)=c("CountryName","LitRate")
+```
+
+#SCHOOLING
+
+```{r}
+lkXLSX="https://github.com/Geanze/TRABAJO-GRUPAL-ESTAD2/raw/master/education-index.xlsx"
+Schooling=import(lkXLSX)
+```
+
+```{r}
+str(Schooling)
+```
+
+```{r}
+Schooling$`HDI Rank`=NULL
+Schooling$`1980`=NULL
+Schooling$`1985`=NULL
+Schooling$`1990`=NULL
+Schooling$`1995`=NULL
+Schooling$`2000`=NULL
+Schooling$`2005`=NULL
+Schooling$`2006`=NULL
+Schooling$`2007`=NULL
+Schooling$`2008`=NULL
+Schooling$`2009`=NULL
+Schooling$`2010`=NULL
+Schooling$`2011`=NULL
+Schooling$`2012`=NULL
+```
+
+```{r}
+names(Schooling)=c("CountryName", "SchoRate")
+```
+
+```{r}
+Schooling[c(2)]= lapply(Schooling[c(2)], as.numeric)
+```
+
+```{r}
+Schooling[complete.cases(Schooling),]
+Schooling=na.omit(Schooling)
+```
+
+#INVERSION EN EDUCACION
+
+```{r}
+library(rio)
+InvestEdu2=import("https://github.com/Geanze/TRABAJO-GRUPAL-ESTAD2/raw/master/InvestPBIEducation.xls")
+InvestEdu2$`Año de data`=NULL
+InvestEdu2$`Country Code`=NULL
+names(InvestEdu2)=c("CountryName", "ExpendEdu")
+```
+
+```{r}
+InvestEdu2=na.omit(InvestEdu2)
+```
+
+
+#URBANIZACION
+```{r}
+lkXLS="https://github.com/Geanze/TRABAJO-GRUPAL-ESTAD2/raw/master/WUP2018-F01-Total_Urban_Rural.xls"
+urban=import(lkXLS)
+```
+
+```{r}
+str(urban)
+```
+
+```{r}
+urban$Urban=NULL
+urban$Rural=NULL
+urban$Total=NULL
+```
+
+```{r}
+names(urban)=c("CountryName", "UrbRate")
+```
+
+```{r}
+urban[complete.cases(urban),]
+urban[c(1)]=lapply(urban[c(1)], trimws,whitespace = "[\\h\\v]")
+```
+
+#Porcentaje de número de estudiantes por profesor en cada país (invertida)
+
+```{r}
+library(rio)
+studTeach=import("https://github.com/Geanze/TRABAJO-GRUPAL-ESTAD2/raw/master/StudTeachRatio.xls")
+```
+
+```{r}
+studTeach$`Año de data`=NULL
+studTeach$`Country Code`=NULL
+```
+
+```{r}
+names(studTeach)=c("CountryName", "StuTeachRat")
+```
+
+```{r}
+complete.cases(studTeach)
+```
+
+```{r}
+studTeach=na.omit(studTeach)
+```
+
+```{r}
+studTeach$StuTeachRat=100-studTeach$StuTeachRat
+```
+
+```{r}
+studTeach[2]==lapply(studTeach[2], as.numeric)
+```
+
+```{r}
+complete.cases(studTeach)
+```
+
+```{r}
+str(studTeach)
+```
