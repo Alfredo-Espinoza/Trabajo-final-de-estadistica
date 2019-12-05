@@ -666,3 +666,167 @@ kable(accarre[!complete.cases(accarre),],type='html')%>%
 ```{r}
 accarre=na.omit(accarre)
 ```
+
+#Con literacy2
+
+```{r}
+aclit=merge(accarre,literacy2,all.x=T, all.y=T)
+```
+
+```{r}
+kable(aclit[!complete.cases(aclit),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+```{r}
+literacy2[literacy2$CountryName=="Bolivia (Plurinational State of)","CountryName"]="Bolivia"
+literacy2[literacy2$CountryName=="Côte d'Ivoire","CountryName"]="Cote d'Ivoire"
+literacy2[literacy2$CountryName=="Democratic Republic of the Congo","CountryName"]="Congo, Dem. Rep."
+literacy2[literacy2$CountryName=="Egypt","CountryName"]="Egypt, Arab Rep."
+literacy2[literacy2$CountryName=="Gambia","CountryName"]="Gambia, The"
+literacy2[literacy2$CountryName=="Iran (Islamic Republic of)","CountryName"]="Iran, Islamic Rep."
+literacy2[literacy2$CountryName=="Kyrgyzstan","CountryName"]="Kyrgyz Republic"
+literacy2[literacy2$CountryName=="Lao People's Democratic Republic","CountryName"]="Lao PDR"
+literacy2[literacy2$CountryName=="Republic of Korea","CountryName"]="Korea, Rep."
+literacy2[literacy2$CountryName=="Slovakia","CountryName"]="Slovak Republic"
+literacy2[literacy2$CountryName=="The former Yugoslav Republic of Macedonia","CountryName"]="North Macedonia"
+literacy2[literacy2$CountryName=="Viet Nam","CountryName"]="Vietnam"
+literacy2[literacy2$CountryName=="Republic of Moldova","CountryName"]="Moldova"
+literacy2[literacy2$CountryName=="United Republic of Tanzania","CountryName"]="Tanzania"
+```
+
+```{r}
+aclit=merge(accarre,literacy2,all.x=T, all.y=T)
+```
+
+```{r}
+kable(aclit[!complete.cases(aclit),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+```{r}
+aclit=na.omit(aclit)
+```
+
+#Con Schooling
+
+```{r}
+clischol=merge(aclit,Schooling,all.x=T, all.y=T)
+```
+
+```{r}
+kable(clischol[!complete.cases(clischol),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+```{r}
+Schooling[Schooling$CountryName=="Bolivia (Plurinational State of)","CountryName"]="Bolivia"
+Schooling[Schooling$CountryName=="Cape Verde","CountryName"]="Cabo Verde"
+Schooling[Schooling$CountryName=="Congo (Democratic Republic of the)","CountryName"]="Congo, Dem. Rep."
+Schooling[Schooling$CountryName=="Egypt","CountryName"]="Egypt, Arab Rep."
+Schooling[Schooling$CountryName=="Gambia","CountryName"]="Gambia, The"
+Schooling[Schooling$CountryName=="Iran (Islamic Republic of)","CountryName"]="Iran, Islamic Rep."
+Schooling[Schooling$CountryName=="Korea (Republic of)","CountryName"]="Korea, Rep."
+Schooling[Schooling$CountryName=="Kyrgyzstan","CountryName"]="Kyrgyz Republic"
+Schooling[Schooling$CountryName=="Lao People's Democratic Republic","CountryName"]="Lao PDR"
+Schooling[Schooling$CountryName=="Moldova (Republic of)","CountryName"]="Moldova"
+Schooling[Schooling$CountryName=="Slovakia","CountryName"]="Slovak Republic"
+Schooling[Schooling$CountryName=="Tanzania (United Republic of)","CountryName"]="Tanzania"
+Schooling[Schooling$CountryName=="The former Yugoslav Republic of Macedonia","CountryName"]="North Macedonia"
+```
+
+```{r}
+clischol=merge(aclit,Schooling,all.x=T, all.y=T)
+```
+
+```{r}
+kable(clischol[!complete.cases(clischol),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+```{r}
+clischol=na.omit(clischol)
+```
+
+#Con InvestEdu2
+
+```{r}
+invcli=merge(clischol,InvestEdu2,all.x=T, all.y=T)
+```
+
+```{r}
+kable(invcli[!complete.cases(invcli),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+Se pierden casos por falta de datos
+
+```{r}
+invcli=na.omit(invcli)
+```
+
+#Con urban
+
+```{r}
+invurb=merge(invcli,urban,all.x=T, all.y=T)
+```
+
+```{r}
+kable(invurb[!complete.cases(invurb),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+```{r}
+urban[urban$CountryName=="Bolivia (Plurinational State of)","CountryName"]="Bolivia"
+urban[urban$CountryName=="Côte d'Ivoire","CountryName"]="Cote d'Ivoire"
+urban[urban$CountryName=="Czechia","CountryName"]="Czech Republic"
+urban[urban$CountryName=="Democratic Republic of the Congo","CountryName"]="Congo, Dem. Rep."
+urban[urban$CountryName=="Gambia","CountryName"]="Gambia, The"
+urban[urban$CountryName=="Iran (Islamic Republic of)","CountryName"]="Iran, Islamic Rep."
+urban[urban$CountryName=="Kyrgyzstan","CountryName"]="Kyrgyz Republic"
+urban[urban$CountryName=="Lao People's Democratic Republic","CountryName"]="Lao PDR"
+urban[urban$CountryName=="Slovakia","CountryName"]="Slovak Republic"
+urban[urban$CountryName=="United Republic of Tanzania","CountryName"]="Tanzania"
+urban[urban$CountryName=="United States of America","CountryName"]="United States"
+urban[urban$CountryName=="Republic of Moldova","CountryName"]="Moldova"
+urban[urban$CountryName=="Viet Nam","CountryName"]="Vietnam"
+```
+
+```{r}
+invurb=merge(invcli,urban,all.x=T, all.y=T)
+```
+
+```{r}
+kable(invurb[!complete.cases(invurb),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+```{r}
+invurb=na.omit(invurb)
+```
+
+#Con studTeach
+
+```{r}
+sturb=merge(invurb,studTeach,all.x=T, all.y=T)
+```
+
+```{r}
+kable(sturb[!complete.cases(sturb),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+
+Falta de datos
+```{r}
+sturb=na.omit(sturb)
+```
+
+sturb es la base final por ahora.
