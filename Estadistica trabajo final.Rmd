@@ -150,5 +150,9 @@ agua$...3=NULL
 agua=na.omit(agua)
 ```
 
+#CRECIMIENTO DEL PBI
 
+```{r}
+CRE="https://github.com/Alfredo-Espinoza/Estadistica-2-Parte-individual-del-trabajo-grupal/raw/master/crecimiento%20bm.xlsx"
+crepbi=import(CRE)
 
