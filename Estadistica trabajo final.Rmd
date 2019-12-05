@@ -39,4 +39,12 @@ empleo=na.omit(empleo)
 
 ```{r}
 SA="https://github.com/claudia1006/PROYECTO/raw/master/%25%20de%20cobertura%20de%20salud..xlsx"
+salud=import(SA)
+salud[,]=lapply(salud[,], trimws,whitespace = "[\\h\\v]") # no blanks
+names(salud)=gsub(" ","",names(salud)) 
+salud$`%decoberturadesalud2017`=as.numeric(salud$`%decoberturadesalud2017`) #UNO SOLO 
+salud=na.omit(salud) 
+names(salud)[1]="CountryName"
+```
+
 
