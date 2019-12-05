@@ -1109,3 +1109,21 @@ deturb[deturb$CountryName=="Slovak Republic","CountryName"]="Slovakia"
 ```{r}
 CountryFull=merge(mapaMundo,deturb,by.x='COUNTRYAFF',by.y='CountryName')
 ```
+
+
+```{r}
+names(CountryFull)
+```
+
+##Se procederá a graficar para ver las posiciones de los países:
+```{r}
+aggregate(desarrolloecon~clustDIV,data=CountryFull,FUN = mean)
+```
+
+```{r,fig.width=10, fig.height=5} 
+# colores
+myColors=c('red','skyblue',"darkgreen","purple") 
+
+plot(mapaMundo,col='black', main='Mapa  a partir de índices')
+plot(teste,col=myColors[teste$clustDIV], add=T,border="white")
+```
