@@ -35,3 +35,8 @@ empleo=na.omit(empleo)
 
 ```
 
+#COBERTURA DE SALUD 
+
+```{r}
+SA="https://github.com/claudia1006/PROYECTO/raw/master/%25%20de%20cobertura%20de%20salud..xlsx"
+
