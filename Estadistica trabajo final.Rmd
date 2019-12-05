@@ -966,4 +966,94 @@ table(as.numeric(deturb$regimetype))
 str(deturb)
 ```
 
+##CLUSTERS
+
+```{r}
+#Nuestro punto de partida clave siempre ha sido el cálculo de la matriz de distancias, añadamos la semilla aleatoria:
+set.seed(2019) #el R decide que tiene que ser algo aleatorio, facilita que R elija ese punto al azar, permitiría que sea replicable, siempre ponerlo por si acaso para queno salga un país en otro sitio. 
+library(cluster)
+library(factoextra)
+inputData=deturb[,c(18:21)]
+g.dist = daisy(inputData, metric="gower")
+```
+
+#DETERMINANDO CANTIDAD DE CLUSTERS 
+
+```{r}
+library(ggplot2)
+```
+
+Clusters recomendados para partición:
+
+```{r}
+fviz_nbclust(inputData, pam,diss=g.dist,method = "gap_stat",k.max = 10,verbose = F)
+#Significa 7 clusters 
+#Pam es la cantidad de clusters a decidir 
+```
+
+Clusters recomendados para jerarquización:
+
+```{r}
+fviz_nbclust(inputData, hcut,diss=g.dist,method = "gap_stat",k.max = 10,verbose = F)
+```
+
+Clusterizemos: 
+
+```{r}
+res.pam = pam(g.dist,7,cluster.only = F)
+res.agnes = hcut(g.dist, k = 4,hc_func='agnes',hc_method = "ward.D") #se emplea el método Ward
+res.diana = hcut(g.dist, k = 4,hc_func='diana')
+
+```
+
+#Evaluación gráfica 
+
+Se van a evaluar los gráficos para cada uno. 
+
+```{r}
+#Evaluación gráfica para pam:
+fviz_silhouette(res.pam)
+
+```
+
+```{r}
+#Evaluación gráfica para agnes:
+fviz_silhouette(res.agnes)
+
+```
+
+```{r}
+#Evaluación gráfica para diana:
+fviz_silhouette(res.diana)
+
+```
+
+Se asume que el gráfico que tiene menos siluetas negativas es el preferible a los demás.
+El recomendado es diana, por tener mayor average silhoutte width
+
+```{r}
+res.diana <- hcut(g.dist, k = 4,hc_func='diana')
+deturb$clustDIV=res.diana$cluster
+```
+
+```{r}
+# guardando resultado anterior en objeto "agg": 
+agg=aggregate(as.matrix(cbind(deturb[,c(18:21)]))~ clustDIV, 
+              data=deturb, # luego las funciones que deseas
+              FUN=plyr::each(MD = median, Media = mean))
+
+# convertir en data frame, y 
+tablaResumen=t(as.data.frame(agg))
+tablaResumen
+```
+
+El cluster 3 es el mejor. El orden de mejor a peor es de 3, 1, 4, 2
+
+#Gráficos
+
+```{r,fig.width=10, fig.height=5} 
+library(ggrepel)
+
+fviz_dend(res.diana, cex = 0.5,horiz = T)
+```
 
