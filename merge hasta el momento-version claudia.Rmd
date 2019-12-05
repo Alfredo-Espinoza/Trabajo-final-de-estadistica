@@ -1,0 +1,282 @@
+MERGE DE TODOS ORIGINAL 
+
+VARIABLES DE TODOS 
+
+ELECTRICIDAD
+
+```{r}
+library(rio)
+elec="https://github.com/adrianoshimante1998/Trabajo-grupal/raw/master/API_EG.ELC.ACCS.ZS_DS2_en_excel_v2_422316.xls"
+electricidad=import(elec)
+electricidad[,]=lapply(electricidad[,], trimws,whitespace = "[\\h\\v]") # no blanks
+electricidad=na.omit(electricidad)
+names(electricidad)=gsub(" ","",names(electricidad)) 
+electricidad$Electricity2017=as.numeric(electricidad$Electricity2017) #UNO SOLO 
+electricidad=na.omit(electricidad) 
+```
+
+EMPLEO
+
+```{r}
+EMPLEO="https://github.com/claudia1006/PROYECTO/raw/master/%25employment.xls"
+empleo=import(EMPLEO)
+empleo[,]=lapply(empleo[,], trimws,whitespace = "[\\h\\v]") # no blanks
+names(empleo)=gsub(" ","",names(empleo)) 
+empleo$`%Empleo2017`=as.numeric(empleo$`%Empleo2017`) #UNO SOLO 
+empleo=na.omit(empleo) 
+
+```
+
+COBERTURA DE SALUD 
+
+```{r}
+SA="https://github.com/claudia1006/PROYECTO/raw/master/%25%20de%20cobertura%20de%20salud..xlsx"
+salud=import(SA)
+salud[,]=lapply(salud[,], trimws,whitespace = "[\\h\\v]") # no blanks
+names(salud)=gsub(" ","",names(salud)) 
+salud$`%decoberturadesalud2017`=as.numeric(salud$`%decoberturadesalud2017`) #UNO SOLO 
+salud=na.omit(salud) 
+names(salud)[1]="CountryName"
+```
+
+EXPORTACIONES DE BIENES Y SERVICIOS 
+
+```{r}
+EX="https://github.com/claudia1006/PROYECTO/raw/master/Exportaciones%20de%20bienes%20y%20servicios%20(%25%20del%20GDP).xls"
+expo=import(EX)
+expo[,]=lapply(expo[,], trimws,whitespace = "[\\h\\v]") # no blanks
+names(expo)=gsub(" ","",names(expo)) 
+expo$`Expobienesyservicio%delGDP2017`=as.numeric(expo$`Expobienesyservicio%delGDP2017`) #UNO SOLO 
+expo=na.omit(expo) 
+```
+
+% DE POBLACION QUE USA INTERNET 
+
+```{r}
+linkinter="https://github.com/Alfredo-Espinoza/Estadistica-2-Parte-individual-del-trabajo-grupal/raw/master/API_IT.NET.USER.ZS_DS2_en_excel_v2_199844.xlsx"
+#Descargando en carpeta
+download.file(linkinter, "intercel.xlsx")
+internet <- import_list('intercel.xlsx',rbind = TRUE)
+#Borrando las columnas de otros años
+internet[2:50]=NULL
+internet[2:12]=NULL
+internet[3:13]=NULL
+
+#Eliminando los NA
+internet=internet[complete.cases(internet),]
+#Cambiando nombres de variables.
+names(internet)[1]="CountryName"
+names(internet)[2]="Porcentaje de la población que usa internet (2017)"
+
+#Eliminando posibles espacios vacios
+internet$Country=trimws(internet$Country,whitespace = "[\\h\\v]")
+internet$`Porcentaje de la población que usa internet (2017)`=trimws(internet$`Porcentaje de la población que usa internet (2017)`,whitespace = "[\\h\\v]")
+
+#Eliminando primera fila.
+
+internet=internet[-1,]
+
+#Hay observaciones que corresponden a la suciedad de la data. Varias de ellas serán eliminadas una vez se realiza el merge de acuerdo a "Pais" con las variables del grupo de trabajo. El resto tendrán que ser eliminadas manualmente.
+
+#Pasando la variable a numérico
+
+internet$`Porcentaje de la población que usa internet (2017)`=as.numeric(internet$`Porcentaje de la población que usa internet (2017)`)
+names(internet)=gsub(" ","",names(internet))
+```
+
+EXPECTATIVA DE VIDA AL NACER 
+
+```{r}
+linkvida="https://github.com/Alfredo-Espinoza/Estadistica-2-Parte-individual-del-trabajo-grupal/raw/master/API_SP.DYN.LE00.IN_DS2_en_excel_v2_199538.xlsx"
+#Descargando en carpeta
+download.file(linkvida, "vida.xlsx")
+
+#Unimos todas las hojas:
+
+basevida <- import_list('vida.xlsx',rbind = TRUE)
+#Borrando columnas innecesarias
+basevida[2:50]=NULL
+basevida[2:12]=NULL
+basevida[3:13]=NULL
+
+#Borramos los NAs
+
+basevida=basevida[complete.cases(basevida),]
+
+#Cambiando nombres de variable
+
+names(basevida)[1]="CountryName"
+names(basevida)[2]="Expectativa de vida en años al nacer (2017)"
+
+#Eliminamos la primera fila, porque es producto de la suciedad de losd atos.
+basevida=basevida[-c(1),]
+
+#Eliminando posibles espacios vacios
+
+basevida$Country=trimws(basevida$Country,whitespace = "[\\h\\v]")
+basevida$`Expectativa de vida en años al nacer (2017)`=trimws(basevida$`Expectativa de vida en años al nacer (2017)`,whitespace = "[\\h\\v]")
+
+#Pasando a numérico la variable a estudiar
+
+basevida$"Expectativa de vida en años al nacer (2017)"=as.numeric(basevida$"Expectativa de vida en años al nacer (2017)")
+names(basevida)=gsub(" ","",names(basevida))
+```
+
+GDP PER CAPITA EN DÓLARES
+
+```{r}
+GDPP="https://github.com/claudia1006/PROYECTO/raw/master/GDP%20PER%20CAPITA%20CURRENT%20%24.xlsx"
+GDP=import(GDPP)
+GDP[,]=lapply(GDP[,], trimws,whitespace = "[\\h\\v]") # no blanks
+names(GDP)[2]="GDP PER CAPITA EN $"
+GDP$`GDP PER CAPITA EN $`=as.numeric(GDP$`GDP PER CAPITA EN $`) #UNO SOLO 
+GDP=na.omit(GDP)
+names(GDP)=gsub(" ","",names(GDP)) 
+GDP=na.omit(GDP) 
+```
+
+ACCESO BASICO AL AGUA
+
+```{r}
+AGUA="https://github.com/claudia1006/PROYECTO/raw/master/ACCESO.xls"
+agua=import(AGUA)
+agua[,]=lapply(agua[,], trimws,whitespace = "[\\h\\v]") # no blanks
+names(agua)=gsub(" ","",names(agua))
+agua$`Accesoalagua(en%)2017`=as.numeric(agua$`Accesoalagua(en%)2017`) #UNO SOLO 
+agua$...3=NULL
+agua=na.omit(agua)
+```
+
+CRECIMIENTO DEL PBI
+
+```{r}
+CRE="https://github.com/claudia1006/PROYECTO/raw/master/%25crecimiento%20del%20PBI.xls"
+crepbi=import(CRE)
+crepbi[,]=lapply(crepbi[,], trimws,whitespace = "[\\h\\v]") # no blanks
+names(crepbi)=gsub(" ","",names(crepbi))
+crepbi$...3=as.numeric(crepbi$...3) #UNO SOLO 
+crepbi$Indicadoresdeldesarrollomundial=NULL
+crepbi=na.omit(crepbi)
+names(crepbi)=paste0(crepbi[1,])
+crepbi=crepbi[-1,]
+names(crepbi)[2]="CrecimientoPBI2017"
+names(crepbi)=gsub(" ","",names(crepbi))
+```
+
+CALIDAD DE CARRETERAS 
+
+```{r}
+CARRE="https://github.com/claudia1006/PROYECTO/raw/master/calidad%20de%20carreteras.xlsx"
+ccarre=import(CARRE)
+ccarre[,]=lapply(ccarre[,], trimws,whitespace = "[\\h\\v]") # no blanks
+ccarre$`Road quality`=as.numeric(ccarre$`Road quality`) #UNO SOLO'
+names(ccarre)=gsub(" ","",names(ccarre))
+```
+
+```{r}
+#eliminando numero adelante 
+library(stringr)
+splitted= str_split(ccarre$Country,
+                    pattern = '\\s',
+                    simplify = T)[,-1]
+```
+
+```{r}
+#uniendo los nombres 
+ccarre$Country=trimws(paste(splitted[,1],splitted[,2],splitted[,3]),whitespace = "[\\h\\v]")
+names(ccarre)[1]="CountryName"
+```
+
+```{r}
+summary(agua)
+summary(basevida)
+summary(ccarre)
+summary(crepbi)
+summary(electricidad)
+summary(empleo)
+summary(expo)
+summary(GDP)
+summary(internet)
+summary(salud)
+```
+
+```{r}
+library(rio)
+library(htmltab)
+index="https://github.com/claudia1006/PROYECTO/raw/master/Democracy.xlsx"
+de=import(index, which=2)
+```
+
+
+```{r}
+#sacando nombres raros 
+library(stringr)
+names(de)=str_replace_all(names(de), "[^[:ascii:]]", "") 
+```
+
+```{r}
+#sacando valores raros 
+de[,]=lapply(de[,], str_replace_all,"[^[:ascii:]]","")
+```
+
+```{r}
+#Reemplazar espacios en blanco por nada 
+names(de)=gsub(" ","",names(de)) 
+names(de)
+```
+```{r}
+#no blanks
+de[,]=lapply(de[,], trimws,whitespace = "[\\h\\v]") 
+str(de)
+```
+```{r}
+de=na.omit(de)
+```
+
+```{r}
+names(de)[2]="Regime type"
+names(de)[1]="Country"
+```
+
+
+```{r}
+row.names(de)=de$Country
+```
+
+```{r}
+library(dplyr)
+de$`Regime type`=recode(de$`Regime type`,
+       'Full democracies'='1',
+       'Flawed democracy'='1',
+       'Hybrid regime'='0',
+       'Authoritarian'='0')
+de$`Regime type`=as.ordered(de$`Regime type`)
+```
+
+```{r}
+aba=merge(agua,basevida,by.x = "CountryName",by.y = "CountryName")
+```
+
+```{r}
+
+aba=merge(agua,basevida,all.x=T, all.y=T)
+
+```
+
+```{r}
+aba[!complete.cases(aba),]
+```
+
+```{r}
+library(knitr)
+library(kableExtra)
+kable(aba[!complete.cases(aba),],type='html')%>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                  font_size = 10)
+```
+```{r}
+ii=merge(agua,basevida,all.x=T, all.y=T)
+
+```
+
+

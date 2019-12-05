@@ -1,0 +1,211 @@
+MERGE DE TODOS ORIGINAL 
+
+VARIABLES DE TODOS 
+Datos del Banco Mundial:
+electricidad
+empleo
+expo
+internet
+basevida
+GDP
+crepbi
+agua
+Todo esto debe estar en merge primero
+
+
+No son del Banco Mundial:
+salud
+ccarre
+
+GP
+URBANIZACION
+SCHOOLING
+ALFABETIZACION
+INVERSION EN EDUCACION
+studTeach
+
+INDICES
+
+Bienestar <- empleo, basevida,  agua, salud
+
+Urbanización <- urbanizacion, electricidad, internet, ccarre
+
+Educación <- alfabetización, schooling, inversion, studteach
+
+Desarrollo económico <- crepbi, gpd, expo, porcentaje del PBI en recaudación de impuestos.
+
+
+EMPLEO
+
+```{r}
+EMPLEO="https://github.com/claudia1006/PROYECTO/raw/master/%25employment.xls"
+empleo=import(EMPLEO)
+empleo[,]=lapply(empleo[,], trimws,whitespace = "[\\h\\v]") # no blanks
+names(empleo)=gsub(" ","",names(empleo)) 
+empleo$`%Empleo2017`=as.numeric(empleo$`%Empleo2017`) #UNO SOLO 
+empleo=na.omit(empleo) 
+
+```
+
+COBERTURA DE SALUD 
+
+```{r}
+SA="https://github.com/claudia1006/PROYECTO/raw/master/%25%20de%20cobertura%20de%20salud..xlsx"
+salud=import(SA)
+salud[,]=lapply(salud[,], trimws,whitespace = "[\\h\\v]") # no blanks
+names(salud)=gsub(" ","",names(salud)) 
+salud$`%decoberturadesalud2017`=as.numeric(salud$`%decoberturadesalud2017`) #UNO SOLO 
+salud=na.omit(salud) 
+names(salud)[1]="CountryName"
+```
+
+EXPORTACIONES DE BIENES Y SERVICIOS 
+
+```{r}
+EX="https://github.com/claudia1006/PROYECTO/raw/master/Exportaciones%20de%20bienes%20y%20servicios%20(%25%20del%20GDP).xls"
+expo=import(EX)
+expo[,]=lapply(expo[,], trimws,whitespace = "[\\h\\v]") # no blanks
+names(expo)=gsub(" ","",names(expo)) 
+expo$`Expobienesyservicio%delGDP2017`=as.numeric(expo$`Expobienesyservicio%delGDP2017`) #UNO SOLO 
+expo=na.omit(expo) 
+```
+
+
+GDP PER CAPITA EN DÓLARES
+
+```{r}
+GDPP="https://github.com/claudia1006/PROYECTO/raw/master/GDP%20PER%20CAPITA%20CURRENT%20%24.xlsx"
+GDP=import(GDPP)
+GDP[,]=lapply(GDP[,], trimws,whitespace = "[\\h\\v]") # no blanks
+names(GDP)[2]="GDP PER CAPITA EN $"
+GDP$`GDP PER CAPITA EN $`=as.numeric(GDP$`GDP PER CAPITA EN $`) #UNO SOLO 
+GDP=na.omit(GDP)
+names(GDP)=gsub(" ","",names(GDP)) 
+GDP=na.omit(GDP) 
+```
+
+ACCESO BASICO AL AGUA
+
+```{r}
+AGUA="https://github.com/claudia1006/PROYECTO/raw/master/ACCESO.xls"
+agua=import(AGUA)
+agua[,]=lapply(agua[,], trimws,whitespace = "[\\h\\v]") # no blanks
+names(agua)=gsub(" ","",names(agua))
+agua$`Accesoalagua(en%)2017`=as.numeric(agua$`Accesoalagua(en%)2017`) #UNO SOLO 
+agua$...3=NULL
+agua=na.omit(agua)
+```
+
+CRECIMIENTO DEL PBI
+
+```{r}
+CRE="https://github.com/Alfredo-Espinoza/Estadistica-2-Parte-individual-del-trabajo-grupal/raw/master/crecimiento%20bm.xlsx"
+crepbi=import(CRE)
+crepbi[,]=lapply(crepbi[,], trimws,whitespace = "[\\h\\v]") # no blanks
+names(crepbi)=gsub(" ","",names(crepbi))
+```
+
+```{r}
+crepbi$`2017`=as.numeric(crepbi$`2017`)
+```
+
+```{r}
+crepbi$CountryCode=NULL
+```
+```{r}
+names(crepbi)[2]="CrecimientoPBI2017"
+```
+
+
+CALIDAD DE CARRETERAS 
+
+```{r}
+CARRE="https://github.com/claudia1006/PROYECTO/raw/master/calidad%20de%20carreteras.xlsx"
+ccarre=import(CARRE)
+ccarre[,]=lapply(ccarre[,], trimws,whitespace = "[\\h\\v]") # no blanks
+ccarre$`Road quality`=as.numeric(ccarre$`Road quality`) #UNO SOLO'
+names(ccarre)=gsub(" ","",names(ccarre))
+```
+
+```{r}
+#eliminando numero adelante 
+library(stringr)
+splitted= str_split(ccarre$Country,
+                    pattern = '\\s',
+                    simplify = T)[,-1]
+```
+
+```{r}
+#uniendo los nombres 
+ccarre$Country=trimws(paste(splitted[,1],splitted[,2],splitted[,3]),whitespace = "[\\h\\v]")
+names(ccarre)[1]="CountryName"
+```
+
+```{r}
+summary(agua)
+summary(basevida)
+summary(ccarre)
+summary(crepbi)
+summary(electricidad)
+summary(empleo)
+summary(expo)
+summary(GDP)
+summary(internet)
+summary(salud)
+```
+
+DEMOCRACIA
+
+```{r}
+library(rio)
+library(htmltab)
+index="https://github.com/claudia1006/PROYECTO/raw/master/Democracy.xlsx"
+de=import(index, which=2)
+```
+
+
+```{r}
+#sacando nombres raros 
+library(stringr)
+names(de)=str_replace_all(names(de), "[^[:ascii:]]", "") 
+```
+
+```{r}
+#sacando valores raros 
+de[,]=lapply(de[,], str_replace_all,"[^[:ascii:]]","")
+```
+
+```{r}
+#Reemplazar espacios en blanco por nada 
+names(de)=gsub(" ","",names(de)) 
+names(de)
+```
+```{r}
+#no blanks
+de[,]=lapply(de[,], trimws,whitespace = "[\\h\\v]") 
+str(de)
+```
+```{r}
+de=na.omit(de)
+```
+
+```{r}
+names(de)[2]="Regime type"
+names(de)[1]="CountryName"
+```
+
+
+```{r}
+row.names(de)=de$Country
+```
+
+```{r}
+library(dplyr)
+de$`Regime type`=recode(de$`Regime type`,
+       'Full democracies'='1',
+       'Flawed democracy'='1',
+       'Hybrid regime'='0',
+       'Authoritarian'='0')
+de$`Regime type`=as.ordered(de$`Regime type`)
+```
+
