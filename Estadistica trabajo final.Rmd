@@ -155,4 +155,8 @@ agua=na.omit(agua)
 ```{r}
 CRE="https://github.com/Alfredo-Espinoza/Estadistica-2-Parte-individual-del-trabajo-grupal/raw/master/crecimiento%20bm.xlsx"
 crepbi=import(CRE)
+crepbi[,]=lapply(crepbi[,], trimws,whitespace = "[\\h\\v]") # no blanks
+names(crepbi)=gsub(" ","",names(crepbi))
+```
+
 
