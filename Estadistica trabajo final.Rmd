@@ -142,4 +142,13 @@ GDP=na.omit(GDP)
 
 ```{r}
 AGUA="https://github.com/claudia1006/PROYECTO/raw/master/ACCESO.xls"
+agua=import(AGUA)
+agua[,]=lapply(agua[,], trimws,whitespace = "[\\h\\v]") # no blanks
+names(agua)=gsub(" ","",names(agua))
+agua$`Accesoalagua(en%)2017`=as.numeric(agua$`Accesoalagua(en%)2017`) #UNO SOLO 
+agua$...3=NULL
+agua=na.omit(agua)
+```
+
+
 
