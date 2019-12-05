@@ -138,4 +138,8 @@ names(GDP)=gsub(" ","",names(GDP))
 GDP=na.omit(GDP) 
 ```
 
+#ACCESO BASICO AL AGUA
+
+```{r}
+AGUA="https://github.com/claudia1006/PROYECTO/raw/master/ACCESO.xls"
 
